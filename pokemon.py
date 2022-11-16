@@ -6,9 +6,18 @@ Links:          https://www.kaggle.com/datasets/alopez247/pokemon
 '''
 import math
 import numpy as np
+import os
 
 def main():
-    pass
+    # Importing data
+    # Currently, the data is all strings due to the data having some text fields.
+    # We could modify the data table in the future if we want instead of converting a string to a value if we want to.
+    ROOT = os.path.dirname(os.path.abspath(__file__))
+    data = np.loadtxt(os.path.expanduser(os.path.join(ROOT, 'data.csv')), dtype=str, delimiter=",")
+
+    # Train
+
+    # Test
 
 '''Desciption: Calculates the HP stat for the pokemon
 Inputs: base stat, iv, ev, level, gen
@@ -27,7 +36,7 @@ def stat(base, iv, ev, level, gen, nature):
         if nature == 2: nature = 1.1
         elif nature == 1: nature = 1
         else: nature = 0.9
-        
+
         return math.floor((math.floor(((2 * base + iv + math.floor(ev/4)) * level) / 100) + 5) * nature)
     else:
         return math.floor((((base + iv) * 2 + math.floor(math.ceil(math.sqrt(ev))/4)) * level)/100) + 5
