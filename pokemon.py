@@ -14,6 +14,9 @@ def main():
     # We could modify the data table in the future if we want instead of converting a string to a value if we want to.
     ROOT = os.path.dirname(os.path.abspath(__file__))
     data = np.loadtxt(os.path.expanduser(os.path.join(ROOT, 'data.csv')), dtype=str, delimiter=",")
+    
+    # Extracting useful stats (hp, atk, def, spatk, spdef, speed)
+    stats = data[:, 5:10].astype(np.int32)
 
     # Train
 
