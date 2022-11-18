@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 from keras.models import Sequential
 from keras.layers import Input, Dense
 from keras.optimizers import SGD, Adam
+from keras.callbacks import Callback, EarlyStopping
 import keras.utils
 import pdb
 
@@ -28,35 +29,41 @@ def main():
     
     # Creating a mapping of all the types to numbers
     # Then converting the types array to those numbers that way we can get an output that neural network will undestand
-    uniquetypes = np.unique(data[:,2])
-    typemapping = {}
-    for i in range(18):
-        typemapping[uniquetypes[i]] = i
+    _, uniquetypes = np.unique(types, return_inverse=True)
+    maxt = np.max(uniquetypes) + 1
+    onehot = np.eye(maxt)[uniquetypes]
+    # typemapping = {}
+    # for i in range(18):
+    #     typemapping[uniquetypes[i]] = i
     
-    for i, element in enumerate(types):
-        types[i] = int(typemapping.get(element))
-    types = types.astype(np.int32)
+    # for i, element in enumerate(types):
+    #     types[i] = int(typemapping.get(element))
+    # types = types.astype(np.int32)
+    
 
-    # Flipping the dictionary so when we get our values back, we can easily covert them to the associatedtypes pokemon type
-    typemapping = {v: k for k, v in typemapping.items()}
+    # # Flipping the dictionary so when we get our values back, we can easily covert them to the associatedtypes pokemon type
+    # typemapping = {v: k for k, v in typemapping.items()}
 
     # Creating Neural Network
     model = Sequential()
     model.add(Input(shape=(6,)))
-    model.add(Dense(units=100, activation='relu', name='hidden1'))
-    model.add(Dense(units=100, activation='relu', name='hidden2'))
-    model.add(Dense(units=50, activation='relu', name='hidden3'))
-    model.add(Dense(units=50, activation='relu', name='hidden4'))
+    model.add(Dense(units=100, activation='swish', name='hidden1'))
+    model.add(Dense(units=100, activation='swish', name='hidden2'))
+    model.add(Dense(units=50, activation='swish', name='hidden3'))
+    model.add(Dense(units=50, activation='swish', name='hidden4'))
     model.add(Dense(units=18, activation='softmax', name='output')) #softmax good when you have a neuron for each output
     model.summary()
 
     model.compile(loss='mse', optimizer=Adam(learning_rate=0.001), metrics=['accuracy'])
 
+    # Create an EarlyStopping callback
+    # Stops the model if there is no improvement after 100 epochs
+    es = EarlyStopping(monitor='accuracy', mode='max', verbose=1, patience=100)
     # Train
-    history = model.fit(stats, types, epochs=100, batch_size=10, verbose=1)
+    history = model.fit(stats, onehot, epochs=2000, batch_size=10, verbose=1, callbacks=es)
 
     # Test
-    metrics = model.evaluate(stats, types , verbose=0)
+    metrics = model.evaluate(stats, onehot , verbose=0)
 
     # Displaying Data
 
