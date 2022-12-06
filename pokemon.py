@@ -27,15 +27,15 @@ def main():
     # Extracting all the types for each pokemon
     types = data[:, 2]
     # Spliting the data into a training and a testing set
-    train, test = splitData(stats, 0.8, False)
+    # train, test = splitData(stats, 0.8, False)
     
     # Creating a mapping of all the types to numbers
     # Then converting the types array to those numbers that way we can get an output that neural network will undestand
     _, uniquetypes = np.unique(types, return_inverse=True)
     maxt = np.max(uniquetypes) + 1
     onehot = np.eye(maxt)[uniquetypes]
-    trainOnehot = onehot[0:len(train)]
-    testOnehot = onehot[len(train):len(onehot)]
+    # trainOnehot = onehot[0:len(train)]
+    # testOnehot = onehot[len(train):len(onehot)]
     # typemapping = {}
     # for i in range(18):
     #     typemapping[uniquetypes[i]] = i
@@ -64,13 +64,13 @@ def main():
     # Stops the model if there is no improvement after 100 epochs
     es = EarlyStopping(monitor='accuracy', mode='max', verbose=1, patience=50)
     # Train
-    history = model.fit(train, trainOnehot, epochs=2000, batch_size=10, verbose=1, callbacks=es)
+    history = model.fit(stats, onehot, epochs=2000, batch_size=10, verbose=1, callbacks=es)
 
     # Test
-    metrics = model.evaluate(test, testOnehot, verbose=0)
+    metrics = model.evaluate(stats, onehot, verbose=0)
 
     # Displaying Data
-    prediction = model.predict(test)
+    # prediction = model.predict(test)
     pdb.set_trace()
 
 '''Desciption: Calculates the HP stat for the pokemon
