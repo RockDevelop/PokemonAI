@@ -6,6 +6,7 @@ Links:          https://www.kaggle.com/datasets/alopez247/pokemon
 '''
 import math
 import numpy as np
+import argparse
 import os
 import matplotlib.pyplot as plt
 from keras.models import Sequential
@@ -14,12 +15,18 @@ from keras.optimizers import SGD, Adam
 from keras.callbacks import Callback, EarlyStopping
 import keras.utils
 import pdb
+ROOT = os.path.dirname(os.path.abspath(__file__)) # Root directory of this code
 
-def main():
+parser = argparse.ArgumentParser(description="Train a neural network or decision tree to classify which type a pokemon is based on their stats")
+parser.add_argument('-nn', help='chooses to train the neural network model')
+parser.add_argument('-dt', help='chooses to train the decision tree model')
+
+def main(args):
+    print(args)
     # Importing data
     # Currently, the data is all strings due to the data having some text fields.
     # We could modify the data table in the future if we want instead of converting a string to a value if we want to.
-    ROOT = os.path.dirname(os.path.abspath(__file__))
+    
     data = np.loadtxt(os.path.expanduser(os.path.join(ROOT, 'data.csv')), dtype=str, delimiter=",")
     
     # Extracting useful stats (hp, atk, def, spatk, spdef, speed)
@@ -123,4 +130,4 @@ def splitData(data, train_split = 0.8, shuffle = True):
     return training_indexes, testing_indexes
 
 if __name__ == "__main__":
-    main()
+    main(parser.parse_args())
