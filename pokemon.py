@@ -54,11 +54,11 @@ def main():
     model.add(Dense(units=18, activation='softmax', name='output')) #softmax good when you have a neuron for each output
     model.summary()
 
-    model.compile(loss='mse', optimizer=Adam(learning_rate=0.001), metrics=['accuracy'])
+    model.compile(loss='categorical_crossentropy', optimizer=Adam(learning_rate=0.001), metrics=['accuracy'])
 
     # Create an EarlyStopping callback
     # Stops the model if there is no improvement after 100 epochs
-    es = EarlyStopping(monitor='accuracy', mode='max', verbose=1, patience=100)
+    es = EarlyStopping(monitor='accuracy', mode='max', verbose=1, patience=50)
     # Train
     history = model.fit(stats, onehot, epochs=2000, batch_size=10, verbose=1, callbacks=es)
 
