@@ -99,7 +99,7 @@ def stat(base, iv, ev, level, gen, nature):
 Inputs: data, training split percentage (as a decimal), shuffle boolean (whether or not the indexs it picks are random or just in order)
 Output: An array for all the training indexes and an array for all the testing indexes'''
 def splitData(data, train_split = 0.8, shuffle = True):
-    # First get the number of cases that are going to be apart of our training set.
+    # First get the number of cases that are going to be a part of our training set.
     # Then setup a list of potential indexes
     trainNum = int(len(data) * train_split)
     indexes = np.arange(len(data))
