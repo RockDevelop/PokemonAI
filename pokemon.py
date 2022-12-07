@@ -52,7 +52,7 @@ def main(args):
 
     # # Flipping the dictionary so when we get our values back, we can easily covert them to the associatedtypes pokemon type
     # typemapping = {v: k for k, v in typemapping.items()}
-def decision_tree(stats, onehot):
+def decision_tree(data):
     pass
     
 def neural_network(data):
@@ -60,14 +60,17 @@ def neural_network(data):
     stats = data[:, 5:11].astype(np.int32)
     # Extracting all the types for each pokemon
     types = data[:, 2]
-    # Spliting the data into a training and a testing set
-    # train, test = splitData(stats, 0.8, False)
+    # Extracting body style for each pokemon
+    body_style = data[:, 22]
     
     # Creating a mapping of all the types to numbers
     # Then converting the types array to those numbers that way we can get an output that neural network will undestand
     _, uniquetypes = np.unique(types, return_inverse=True)
     maxt = np.max(uniquetypes) + 1
     onehot = np.eye(maxt)[uniquetypes]
+
+    # Spliting the data into a training and a testing set
+    xtrain, ytrain, xtest, ytest = splitData(stats, onehot, 0.9, True)
 
     # Creating Neural Network
     model = Sequential()
@@ -90,14 +93,17 @@ def neural_network(data):
 
     # Create an EarlyStopping callback
     # Stops the model if there is no improvement after some amount of epochs
-    es = EarlyStopping(monitor='accuracy', mode='max', verbose=1, patience=40)
+    es = EarlyStopping(monitor='accuracy', mode='max', verbose=1, patience=30)
     mcp_save = ModelCheckpoint('.saved_model.hdf5', save_best_only=True, monitor='accuracy', mode='max')
-    reduce_lr_loss = ReduceLROnPlateau(monitor='accuracy', factor=0.1, patience=15, verbose=1, mode='max')
+    reduce_lr_loss = ReduceLROnPlateau(monitor='accuracy', factor=0.1, patience=10, verbose=1, mode='max')
     # Train
-    history = model.fit(stats, onehot, epochs=2000, batch_size=10, verbose=1, validation_split=0.15, callbacks=[es, mcp_save, reduce_lr_loss])
+    history = model.fit(xtrain, ytrain, epochs=2000, batch_size=10, verbose=1, validation_split=0.1, callbacks=[es, mcp_save, reduce_lr_loss])
 
     # Test
-    metrics = model.evaluate(stats, onehot, verbose=1)
+    metrics = model.evaluate(xtest, ytest, verbose=1)
+
+    y = np.argmax(model.predict(xtest, verbose=0), axis=1)
+    
 
     # Display the model
     plt.imshow(plt.imread('model_plot.png'))
@@ -134,11 +140,11 @@ def stat(base, iv, ev, level, gen, nature):
 '''Desciption: Splits the given data set into a training and testing set given a set percentage 
 Inputs: data, training split percentage (as a decimal), shuffle boolean (whether or not the indexs it picks are random or just in order)
 Output: An array for all the training indexes and an array for all the testing indexes'''
-def splitData(data, train_split = 0.8, shuffle = True):
+def splitData(stats, onehot, train_split = 0.8, shuffle = True):
     # First get the number of cases that are going to be a part of our training set.
     # Then setup a list of potential indexes
-    trainNum = int(len(data) * train_split)
-    indexes = np.arange(len(data))
+    trainNum = int(len(stats) * train_split)
+    indexes = np.arange(len(stats))
 
     # Shuffle the array when specified to achieve a varied training set
     if shuffle: 
@@ -146,17 +152,30 @@ def splitData(data, train_split = 0.8, shuffle = True):
 
     # Create two arrays that contain the indexs for the training set and then the indexes for the test set
     training_indexes = indexes[0:trainNum]
-    testing_indexes = indexes[trainNum:len(data)]
+    testing_indexes = indexes[trainNum:len(stats)]
 
-    trainingSet = np.empty((1,6))
-    testingSet = np.empty((1,6))
-    for element in training_indexes:
-        trainingSet = np.append(trainingSet, data[element])
-    for element in testing_indexes:
-        testingSet = np.append(testingSet, data[element])
+    # Initialize empty lists
+    xtrain = []
+    ytrain = []
+    xtest = []
+    ytest = []
+    
+    # Loop over the indexes and append the NDarrays to the list
+    for i in training_indexes:
+        xtrain.append(stats[i])
+        ytrain.append(onehot[i])
+    for i in testing_indexes:
+        xtest.append(stats[i])
+        ytest.append(onehot[i])
 
-    pdb.set_trace()
-    return training_indexes, testing_indexes
+    # Convert all the lists into NDarrays
+    xtrain = np.array(xtrain)
+    ytrain = np.array(ytrain)
+    xtest = np.array(xtest)
+    ytest = np.array(ytest)
+
+    # Return the NDarray
+    return xtrain, ytrain, xtest, ytest
 
 if __name__ == "__main__":
     main(parser.parse_args())
