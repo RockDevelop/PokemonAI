@@ -4,6 +4,7 @@ Authors:        Isaac Garay and Riley Peters
 Links:          https://www.kaggle.com/datasets/alopez247/pokemon
                 https://bulbapedia.bulbagarden.net/wiki/Stat
 '''
+import h5py
 import math
 import sys
 import numpy as np
@@ -13,8 +14,8 @@ import matplotlib.pyplot as plt
 from keras.models import Sequential
 from keras.layers import Input, Dense
 from keras.optimizers import SGD, Adam
-from keras.callbacks import Callback, EarlyStopping
-import keras.utils
+from keras.callbacks import Callback, EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
+from keras.utils.vis_utils import plot_model
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 import pdb
 ROOT = os.path.dirname(os.path.abspath(__file__)) # Root directory of this code
@@ -70,23 +71,27 @@ def neural_network(data):
     # Creating Neural Network
     model = Sequential()
     model.add(Input(shape=(6,)))
-    model.add(Dense(units=100, activation='swish', name='hidden1'))
-    model.add(Dense(units=100, activation='swish', name='hidden2'))
+    model.add(Dense(units=100, activation='swish', name='hidden1')) 
+    model.add(Dense(units=50, activation='swish', name='hidden2'))
     model.add(Dense(units=50, activation='swish', name='hidden3'))
-    model.add(Dense(units=50, activation='swish', name='hidden4'))
+    model.add(Dense(units=25, activation='swish', name='hidden4'))
     model.add(Dense(units=18, activation='softmax', name='output')) #softmax good when you have a neuron for each output
     model.summary()
+    plot_model(model, to_file='model_plot.png', show_shapes=True, show_layer_names=True)
+    
 
     model.compile(loss='categorical_crossentropy', optimizer=Adam(learning_rate=0.001), metrics=['accuracy'])
 
     # Create an EarlyStopping callback
     # Stops the model if there is no improvement after some amount of epochs
     es = EarlyStopping(monitor='accuracy', mode='max', verbose=1, patience=50)
+    mcp_save = ModelCheckpoint('.saved_model.hdf5', save_best_only=True, monitor='accuracy', mode='max')
+    reduce_lr_loss = ReduceLROnPlateau(monitor='accuracy', factor=0.1, patience=15, verbose=1, mode='max')
     # Train
-    history = model.fit(stats, onehot, epochs=2000, batch_size=10, verbose=1, callbacks=es)
+    history = model.fit(stats, onehot, epochs=2000, batch_size=10, verbose=1, validation_split=0.15, callbacks=[es, mcp_save, reduce_lr_loss])
 
     # Test
-    metrics = model.evaluate(stats, onehot, verbose=0)
+    metrics = model.evaluate(stats, onehot, verbose=1)
 
     # Displaying Data
     # prediction = model.predict(test)
