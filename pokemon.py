@@ -5,6 +5,7 @@ Links:          https://www.kaggle.com/datasets/alopez247/pokemon
                 https://bulbapedia.bulbagarden.net/wiki/Stat
 '''
 import math
+import sys
 import numpy as np
 import argparse
 import os
@@ -14,33 +15,28 @@ from keras.layers import Input, Dense
 from keras.optimizers import SGD, Adam
 from keras.callbacks import Callback, EarlyStopping
 import keras.utils
+from sklearn.tree import DecisionTreeClassifier, plot_tree
 import pdb
 ROOT = os.path.dirname(os.path.abspath(__file__)) # Root directory of this code
 
 parser = argparse.ArgumentParser(description="Train a neural network or decision tree to classify which type a pokemon is based on their stats")
-parser.add_argument('-nn', help='chooses to train the neural network model')
-parser.add_argument('-dt', help='chooses to train the decision tree model')
+parser.add_argument('-model', '--model', help='chooses to train either the neural network (nn) or the decision tree (dt) model - Example: python .\pokemon.py -model nn')
 
 def main(args):
-    print(args)
     # Importing data
     # Currently, the data is all strings due to the data having some text fields.
     # We could modify the data table in the future if we want instead of converting a string to a value if we want to.
-    
     data = np.loadtxt(os.path.expanduser(os.path.join(ROOT, 'data.csv')), dtype=str, delimiter=",")
     
-    # Extracting useful stats (hp, atk, def, spatk, spdef, speed)
-    stats = data[:, 5:11].astype(np.int32)
-    # Extracting all the types for each pokemon
-    types = data[:, 2]
-    # Spliting the data into a training and a testing set
-    # train, test = splitData(stats, 0.8, False)
-    
-    # Creating a mapping of all the types to numbers
-    # Then converting the types array to those numbers that way we can get an output that neural network will undestand
-    _, uniquetypes = np.unique(types, return_inverse=True)
-    maxt = np.max(uniquetypes) + 1
-    onehot = np.eye(maxt)[uniquetypes]
+    # Extracting the modelChoice and running the correct function
+    modelChoice = args.model
+    if modelChoice == 'nn':
+        neural_network(data)
+    elif modelChoice == 'dt':
+        decision_tree(data)
+    else:
+        print("Please run the model with either:\n    -model nn\n    -model dt")
+        return
     # trainOnehot = onehot[0:len(train)]
     # testOnehot = onehot[len(train):len(onehot)]
     # typemapping = {}
@@ -54,6 +50,22 @@ def main(args):
 
     # # Flipping the dictionary so when we get our values back, we can easily covert them to the associatedtypes pokemon type
     # typemapping = {v: k for k, v in typemapping.items()}
+def decision_tree(stats, onehot):
+    pass
+    
+def neural_network(data):
+    # Extracting useful stats (hp, atk, def, spatk, spdef, speed)
+    stats = data[:, 5:11].astype(np.int32)
+    # Extracting all the types for each pokemon
+    types = data[:, 2]
+    # Spliting the data into a training and a testing set
+    # train, test = splitData(stats, 0.8, False)
+    
+    # Creating a mapping of all the types to numbers
+    # Then converting the types array to those numbers that way we can get an output that neural network will undestand
+    _, uniquetypes = np.unique(types, return_inverse=True)
+    maxt = np.max(uniquetypes) + 1
+    onehot = np.eye(maxt)[uniquetypes]
 
     # Creating Neural Network
     model = Sequential()
@@ -68,7 +80,7 @@ def main(args):
     model.compile(loss='categorical_crossentropy', optimizer=Adam(learning_rate=0.001), metrics=['accuracy'])
 
     # Create an EarlyStopping callback
-    # Stops the model if there is no improvement after 100 epochs
+    # Stops the model if there is no improvement after some amount of epochs
     es = EarlyStopping(monitor='accuracy', mode='max', verbose=1, patience=50)
     # Train
     history = model.fit(stats, onehot, epochs=2000, batch_size=10, verbose=1, callbacks=es)
