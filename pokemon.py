@@ -90,7 +90,7 @@ def neural_network(data):
 
     # Create an EarlyStopping callback
     # Stops the model if there is no improvement after some amount of epochs
-    es = EarlyStopping(monitor='accuracy', mode='max', verbose=1, patience=50)
+    es = EarlyStopping(monitor='accuracy', mode='max', verbose=1, patience=40)
     mcp_save = ModelCheckpoint('.saved_model.hdf5', save_best_only=True, monitor='accuracy', mode='max')
     reduce_lr_loss = ReduceLROnPlateau(monitor='accuracy', factor=0.1, patience=15, verbose=1, mode='max')
     # Train
@@ -98,6 +98,12 @@ def neural_network(data):
 
     # Test
     metrics = model.evaluate(stats, onehot, verbose=1)
+
+    # Display the model
+    plt.imshow(plt.imread('model_plot.png'))
+    plt.axis(False)
+    plt.title('Visual Representation of the Neural Network Layers')
+    plt.show()
 
     # Displaying Data
     # prediction = model.predict(test)
