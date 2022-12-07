@@ -3,6 +3,7 @@ Description:    Creating an AI that will predict what type the pokemon is based 
 Authors:        Isaac Garay and Riley Peters
 Links:          https://www.kaggle.com/datasets/alopez247/pokemon
                 https://bulbapedia.bulbagarden.net/wiki/Stat
+                https://www.graphviz.org/download/
 '''
 import h5py
 import math
@@ -77,7 +78,12 @@ def neural_network(data):
     model.add(Dense(units=25, activation='swish', name='hidden4'))
     model.add(Dense(units=18, activation='softmax', name='output')) #softmax good when you have a neuron for each output
     model.summary()
-    plot_model(model, to_file='model_plot.png', show_shapes=True, show_layer_names=True)
+
+    """This is strictly for generating the .png file that shows what our model looks like
+        Uncomment the line below if you wish to update the .png if you changed the layout
+        Of the model. Note: You have to have pydot installed AND graphviz installed
+        The graphviz download link is in the Links section at the top of the file"""
+    #plot_model(model, to_file='model_plot.png', show_shapes=True, show_layer_names=True)
     
 
     model.compile(loss='categorical_crossentropy', optimizer=Adam(learning_rate=0.001), metrics=['accuracy'])
