@@ -62,6 +62,11 @@ def neural_network(data):
     types = data[:, 2]
     # Extracting body style for each pokemon
     body_style = data[:, 22]
+
+    _, uniquebodies = np.unique(body_style, return_inverse=True)
+    
+    # Combine stats and body_style into one input array
+    stats = np.hstack((stats,uniquebodies[:, None]))
     
     # Creating a mapping of all the types to numbers
     # Then converting the types array to those numbers that way we can get an output that neural network will undestand
@@ -74,7 +79,7 @@ def neural_network(data):
 
     # Creating Neural Network
     model = Sequential()
-    model.add(Input(shape=(6,)))
+    model.add(Input(shape=(7,)))
     model.add(Dense(units=100, activation='swish', name='hidden1')) 
     model.add(Dense(units=50, activation='swish', name='hidden2'))
     model.add(Dense(units=50, activation='swish', name='hidden3'))
