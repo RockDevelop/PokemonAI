@@ -19,6 +19,8 @@ from keras.callbacks import Callback, EarlyStopping, ModelCheckpoint, ReduceLROn
 from keras.utils.vis_utils import plot_model
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 import pdb
+from wordcloud import WordCloud
+
 ROOT = os.path.dirname(os.path.abspath(__file__)) # Root directory of this code
 
 parser = argparse.ArgumentParser(description="Train a neural network or decision tree to classify which type a pokemon is based on their stats")
@@ -109,16 +111,43 @@ def neural_network(data):
 
     y = np.argmax(model.predict(xtest, verbose=0), axis=1)
     
+    # Convert the guessed types from numbers into a string
+    guessed_types = []
+    for elem in y:
+        guessed_types.append(np.unique(types)[elem])
+    
+    # Conver the actual types from one hot arrays into a string
+    actual_types = []
+    _, actual_index = np.where(ytest)
+    for elem in actual_index:
+        actual_types.append(np.unique(types)[elem])
+
+    # Convert the output into a single string instead of a list
+    guessed_text = " ".join(guessed_types)
+    actual_text = " ".join(actual_types)
+
+    # Generate a word cloud for the guessed types   
+    guessed_wordcloud = WordCloud(background_color='white').generate(guessed_text)
+    plt.imshow(guessed_wordcloud, interpolation='bilinear')
+    plt.axis(False)
+    plt.title("Neural Network Testing Prediction")
+
+    # Generate the word cloud for the actual types
+    plt.figure()
+    actual_wordcloud = WordCloud(background_color='white').generate(actual_text)
+    plt.imshow(actual_wordcloud, interpolation='bilinear')
+    plt.axis(False)
+    plt.title("Neural Network Testing Actual")
 
     # Display the model
+    plt.figure()
     plt.imshow(plt.imread('model_plot.png'))
     plt.axis(False)
     plt.title('Visual Representation of the Neural Network Layers')
     plt.show()
 
     # Displaying Data
-    # prediction = model.predict(test)
-    pdb.set_trace()
+    
 
 '''Desciption: Calculates the HP stat for the pokemon
 Inputs: base stat, iv, ev, level, gen
