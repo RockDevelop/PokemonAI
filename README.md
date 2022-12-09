@@ -32,11 +32,11 @@ pip install wordcloud
 You have two choices when running the model. You are able to choose if you want to run
 the neural network model, or the decision tree model. The command line arguments are below.
 
-### Neural Network
+* Neural Network
 ```
 python pokemon.py -model nn
 ```
-### Decision Tree
+* Decision Tree
 ```
 python pokemon.py -model dt
 ```
