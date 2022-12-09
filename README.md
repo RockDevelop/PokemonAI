@@ -4,27 +4,27 @@ A Python script meant to be run with command line inputs to choose which model y
 This program requires several python libraries to run. The required libraries are listed below.
 
 ## Required Libraries
-* Tensorflow - Used for something to be added eventually I think
+* [Tensorflow](https://www.tensorflow.org/) - Used for something to be added eventually I think
 ```
 pip install tensorflow
 ```
-* Keras - Used to create, train, and test the neural network model
+* [Keras](https://keras.io/) - Used to create, train, and test the neural network model
 ```
 pip install keras
 ```
-* Matplotlib - Used to plot and show the graphs related to the models
+* [Matplotlib](https://matplotlib.org/) - Used to plot and show the graphs related to the models
 ```
 pip install -U matplotlib
 ```
-* Scikit-learn - Used to create, train, and test the decision tree model
+* [Scikit-learn](https://scikit-learn.org/stable/) - Used to create, train, and test the decision tree model
 ```
 pip install -U scikit-learn
 ```
-* Numpy - Used for data manipulation and ease of access to more complex data structres
+* [Numpy](https://numpy.org/) - Used for data manipulation and ease of access to more complex data structres
 ```
 pip install numpy
 ```
-* Wordcloud - Used for the visualization of the neural network predictions
+* [Wordcloud](https://pypi.org/project/wordcloud/) - Used for the visualization of the neural network predictions
 ```
 pip install wordcloud
 ```
