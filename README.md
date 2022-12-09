@@ -24,6 +24,10 @@ pip install -U scikit-learn
 ```
 pip install numpy
 ```
+* Wordcloud - Used for the visualization of the neural network predictions
+```
+pip install wordcloud
+```
 ## How to run
 You have two choices when running the model. You are able to choose if you want to run
 the neural network model, or the decision tree model. The command line arguments are below.
