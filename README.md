@@ -4,7 +4,7 @@ A Python script meant to be run with command line inputs to choose which model y
 This program requires several python libraries to run. The required libraries are listed below.
 
 ## Required Libraries
-* [Tensorflow](https://www.tensorflow.org/) - Used for something to be added eventually I think
+* [Tensorflow](https://www.tensorflow.org/) - Backbone of the machine learning models
 ```
 pip install tensorflow
 ```
