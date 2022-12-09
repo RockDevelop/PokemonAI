@@ -1,5 +1,6 @@
 ''' 
-Description:    Creating an AI that will predict what type the pokemon is based on the given stats.
+Description:    Creating a machine learning model that will predict what type the pokemon is based
+                on the given stats and body style.
 Authors:        Isaac Garay and Riley Peters
 Links:          https://www.kaggle.com/datasets/alopez247/pokemon
                 https://bulbapedia.bulbagarden.net/wiki/Stat
