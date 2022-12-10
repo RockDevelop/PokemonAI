@@ -24,6 +24,7 @@ from wordcloud import WordCloud
 from sklearn.metrics import confusion_matrix
 
 ROOT = os.path.dirname(os.path.abspath(__file__)) # Root directory of this code
+TRAIN_SPLIT = 0.9
 
 parser = argparse.ArgumentParser(description="Train a neural network or decision tree to classify which type a pokemon is based on their stats")
 parser.add_argument('-model', '--model', help='chooses to train either the neural network (nn) or the decision tree (dt) model - Example: python .\pokemon.py -model nn')
@@ -63,7 +64,7 @@ def decision_tree(data):
     maxt = np.max(uniquetypes) + 1
 
     # Spliting the data into a training and a testing set
-    xtrain, ytrain, xtest, ytest = splitData(stats, uniquetypes, 0.9, True)
+    xtrain, ytrain, xtest, ytest = splitData(stats, uniquetypes, TRAIN_SPLIT, True)
 
     # Creating Decision Tree
     myTree = DecisionTreeClassifier(criterion='entropy')
@@ -157,7 +158,7 @@ def neural_network(data):
     onehot = np.eye(maxt)[uniquetypes]
 
     # Spliting the data into a training and a testing set
-    xtrain, ytrain, xtest, ytest = splitData(stats, onehot, 0.85, True)
+    xtrain, ytrain, xtest, ytest = splitData(stats, onehot, TRAIN_SPLIT, True)
 
     # Creating Neural Network
     model = Sequential()
@@ -191,11 +192,13 @@ def neural_network(data):
     # Test
     metrics = model.evaluate(xtest, ytest, verbose=1)
 
+    # y contains the guessed types and actual_index contains the correct indexes
     y = np.argmax(model.predict(xtest, verbose=0), axis=1)
+    _, actual_index = np.where(ytest)
 
-    # bar graph starts here
-    pdb.set_trace()
+    # Creating a bar graph
     
+
     # Convert the guessed types from numbers into a string
     guessed_types = []
     for elem in y:
@@ -203,7 +206,6 @@ def neural_network(data):
     
     # Conver the actual types from one hot arrays into a string
     actual_types = []
-    _, actual_index = np.where(ytest)
     for elem in actual_index:
         actual_types.append(np.unique(types)[elem])
 
@@ -257,7 +259,7 @@ def stat(base, iv, ev, level, gen, nature):
 '''Desciption: Splits the given data set into a training and testing set given a set percentage 
 Inputs: data, training split percentage (as a decimal), shuffle boolean (whether or not the indexs it picks are random or just in order)
 Output: An array for all the training indexes and an array for all the testing indexes'''
-def splitData(stats, onehot, train_split = 0.8, shuffle = True):
+def splitData(stats, onehot, train_split, shuffle = True):
     # First get the number of cases that are going to be a part of our training set.
     # Then setup a list of potential indexes
     trainNum = int(len(stats) * train_split)
