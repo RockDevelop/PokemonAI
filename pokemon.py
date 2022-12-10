@@ -133,7 +133,7 @@ def neural_network(data):
     onehot = np.eye(maxt)[uniquetypes]
 
     # Spliting the data into a training and a testing set
-    xtrain, ytrain, xtest, ytest = splitData(stats, onehot, 0.9, True)
+    xtrain, ytrain, xtest, ytest = splitData(stats, onehot, 0.85, True)
 
     # Creating Neural Network
     model = Sequential()
@@ -201,8 +201,6 @@ def neural_network(data):
     plt.axis(False)
     plt.title('Visual Representation of the Neural Network Layers')
     plt.show()
-
-    # Displaying Data
     
 
 '''Desciption: Calculates the HP stat for the pokemon
