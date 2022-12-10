@@ -136,9 +136,6 @@ def decision_tree(data):
     plt.show()
 
 
-
-
-
     
 def neural_network(data):
     # Extracting useful stats (hp, atk, def, spatk, spdef, speed)
@@ -195,6 +192,9 @@ def neural_network(data):
     metrics = model.evaluate(xtest, ytest, verbose=1)
 
     y = np.argmax(model.predict(xtest, verbose=0), axis=1)
+
+    # bar graph starts here
+    pdb.set_trace()
     
     # Convert the guessed types from numbers into a string
     guessed_types = []
