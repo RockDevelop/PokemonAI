@@ -184,10 +184,12 @@ def neural_network(data):
     # Create an EarlyStopping callback
     # Stops the model if there is no improvement after some amount of epochs
     es = EarlyStopping(monitor='accuracy', mode='max', verbose=1, patience=30)
-    mcp_save = ModelCheckpoint('.saved_model.hdf5', save_best_only=True, monitor='accuracy', mode='max')
+
+    # If you wanted to save the model this would allow you to do so
+    # mcp_save = ModelCheckpoint('.saved_model.hdf5', save_best_only=True, monitor='accuracy', mode='max')
     reduce_lr_loss = ReduceLROnPlateau(monitor='accuracy', factor=0.1, patience=10, verbose=1, mode='max')
     # Train
-    history = model.fit(xtrain, ytrain, epochs=2000, batch_size=10, verbose=1, validation_split=0.1, callbacks=[es, mcp_save, reduce_lr_loss])
+    history = model.fit(xtrain, ytrain, epochs=2000, batch_size=10, verbose=1, validation_split=0.1, callbacks=[es, reduce_lr_loss])
 
     # Test
     metrics = model.evaluate(xtest, ytest, verbose=1)
