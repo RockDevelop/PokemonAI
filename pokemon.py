@@ -78,11 +78,38 @@ def decision_tree(data):
     train = confusion_matrix(ytrain, trainPrediction)
     print(test)
 
+    # Shrinking testing confusion matrix
+    testOutcome = []
+    for row in range(len(test)):
+        correct = 0
+        error = 0
+        for element in range(len(test[0])):
+            if row == element:
+                correct = test[row][element]
+            else:
+                error += test[row][element]
+        testOutcome.append([correct, error])
+    testOutcome = np.array(testOutcome)
+
+    # Shrinking training confusion matrix
+    trainOutcome = []
+    for row in range(len(train)):
+        correct = 0
+        error = 0
+        for element in range(len(train[0])):
+            if row == element:
+                correct = train[row][element]
+            else:
+                error += train[row][element]
+        trainOutcome.append([correct, error])
+    trainOutcome = np.array(trainOutcome)
+
     # Compare training and test accuracy
-    testAccuracy = ((test[0][0] + test[1][1])/(test[0][0]+test[1][0]+test[1][1]+test[0][1]))
-    trainAccuracy = ((train[0][0] + train[1][1])/(train[0][0]+train[1][0]+train[1][1]+train[0][1]))
+    testAccuracy = np.sum(testOutcome[:,0]) / np.sum(testOutcome)
+    trainAccuracy = np.sum(trainOutcome[:,0]) / np.sum(trainOutcome)
     print("Training Accuracy: " + str(trainAccuracy))
     print("Testing Accuracy: " + str(testAccuracy))
+    pdb.set_trace()
     
     # Setting up Bar Graph
     values = np.arange(0, 200, 25)
