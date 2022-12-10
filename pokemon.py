@@ -21,6 +21,7 @@ from keras.utils.vis_utils import plot_model
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 import pdb
 from wordcloud import WordCloud
+from sklearn.metrics import confusion_matrix
 
 ROOT = os.path.dirname(os.path.abspath(__file__)) # Root directory of this code
 
@@ -42,21 +43,75 @@ def main(args):
     else:
         print("Please run the model with either:\n    -model nn\n    -model dt")
         return
-    # trainOnehot = onehot[0:len(train)]
-    # testOnehot = onehot[len(train):len(onehot)]
-    # typemapping = {}
-    # for i in range(18):
-    #     typemapping[uniquetypes[i]] = i
-    
-    # for i, element in enumerate(types):
-    #     types[i] = int(typemapping.get(element))
-    # types = types.astype(np.int32)
-    
 
-    # # Flipping the dictionary so when we get our values back, we can easily covert them to the associatedtypes pokemon type
-    # typemapping = {v: k for k, v in typemapping.items()}
 def decision_tree(data):
-    pass
+    # Extracting useful stats (hp, atk, def, spatk, spdef, speed)
+    stats = data[:, 5:11].astype(np.int32)
+    # Extracting all the types for each pokemon
+    types = data[:, 2]
+    # Extracting body style for each pokemon
+    body_style = data[:, 22]
+
+    _, uniquebodies = np.unique(body_style, return_inverse=True)
+    
+    # Combine stats and body_style into one input array
+    stats = np.hstack((stats,uniquebodies[:, None]))
+    
+    # Creating a mapping of all the types to numbers
+    # Then converting the types array to those numbers that way we can get an output that neural network will undestand
+    _, uniquetypes = np.unique(types, return_inverse=True)
+    maxt = np.max(uniquetypes) + 1
+
+    # Spliting the data into a training and a testing set
+    xtrain, ytrain, xtest, ytest = splitData(stats, uniquetypes, 0.9, True)
+
+    # Creating Decision Tree
+    myTree = DecisionTreeClassifier(criterion='entropy')
+    myTree = myTree.fit(xtrain, ytrain)
+
+    # Test Decision Tree
+    testPrediction = myTree.predict(xtest)
+    trainPrediction = myTree.predict(xtrain)
+
+    # Show confusion matrix for test data
+    test = confusion_matrix(ytest, testPrediction)
+    train = confusion_matrix(ytrain, trainPrediction)
+    print(test)
+
+    # Compare training and test accuracy
+    testAccuracy = ((test[0][0] + test[1][1])/(test[0][0]+test[1][0]+test[1][1]+test[0][1]))
+    trainAccuracy = ((train[0][0] + train[1][1])/(train[0][0]+train[1][0]+train[1][1]+train[0][1]))
+    print("Training Accuracy: " + str(trainAccuracy))
+    print("Testing Accuracy: " + str(testAccuracy))
+    
+    # Setting up Bar Graph
+    values = np.arange(0, 200, 25)
+
+    colors = plt.cm.BuPu(np.linspace(0, 0.5, len(uniquetypes)))
+    n_rows = len(testPrediction)
+
+    index = np.arange(len(uniquetypes)) + 0.3
+    bar_width = 0.4
+
+    y_offset = np.zeros(len(uniquetypes))
+
+    cell_text = []
+    for row in range(n_rows):
+        plt.bar(index, testPrediction[row], bar_width, bottom=y_offset, color=colors[row])
+        y_offset = y_offset + testPrediction[row]
+        cell_text.append(['%1.1f' % (x / 1000.0) for x in y_offset])
+
+    colors = colors[::-1]
+    cell_text.reverse()
+    barGraph = plt.table(cellText=cell_text,rowColours=colors,loc='bottom')
+    plt.subplots_adjust(left=0.2, bottom=0.2)
+    plt.xticks([])
+    plt.show()
+
+
+
+
+
     
 def neural_network(data):
     # Extracting useful stats (hp, atk, def, spatk, spdef, speed)
