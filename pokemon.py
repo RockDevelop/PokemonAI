@@ -140,6 +140,30 @@ def decision_tree(data):
     plt.show()
 
 
+    # values = np.arange(0, 200, 25)
+
+    # colors = plt.cm.BuPu(np.linspace(0, 0.5, len(uniquetypes)))
+    # n_rows = len(testPrediction)
+
+    # index = np.arange(len(uniquetypes)) + 0.3
+    # bar_width = 0.4
+
+    # y_offset = np.zeros(len(uniquetypes))
+
+    # cell_text = []
+    # for row in range(n_rows):
+    #     plt.bar(index, testPrediction[row], bar_width, bottom=y_offset, color=colors[row])
+    #     y_offset = y_offset + testPrediction[row]
+    #     cell_text.append(['%1.1f' % (x / 1000.0) for x in y_offset])
+
+    # colors = colors[::-1]
+    # cell_text.reverse()
+    # barGraph = plt.table(cellText=cell_text,rowColours=colors,loc='bottom')
+    # plt.subplots_adjust(left=0.2, bottom=0.2)
+    # plt.xticks([])
+    # plt.show()
+
+
     
 def neural_network(data):
     # Extracting useful stats (hp, atk, def, spatk, spdef, speed)
@@ -262,7 +286,7 @@ def stat(base, iv, ev, level, gen, nature):
 '''Desciption: Splits the given data set into a training and testing set given a set percentage 
 Inputs: data, training split percentage (as a decimal), shuffle boolean (whether or not the indexs it picks are random or just in order)
 Output: An array for all the training indexes and an array for all the testing indexes'''
-def splitData(stats, onehot, train_split, shuffle = True):
+def splitData(stats, onehot, train_split, shuffle):
     # First get the number of cases that are going to be a part of our training set.
     # Then setup a list of potential indexes
     trainNum = int(len(stats) * train_split)
@@ -295,6 +319,8 @@ def splitData(stats, onehot, train_split, shuffle = True):
     ytrain = np.array(ytrain)
     xtest = np.array(xtest)
     ytest = np.array(ytest)
+
+    # Make sure there is at least 1 of
 
     # Return the NDarray
     return xtrain, ytrain, xtest, ytest
