@@ -77,7 +77,20 @@ def decision_tree(data):
     # Show confusion matrix for test data
     test = confusion_matrix(ytest, testPrediction)
     train = confusion_matrix(ytrain, trainPrediction)
-    print(test)
+
+    # Accounting for missing lables
+    labels = np.unique(ytest)
+    missing = []
+    index = 0
+    offset = 0
+    while index < len(_):
+        if index != labels[index - offset]:
+            missing.append(index)
+            offset += 1
+        index += 1
+    for element in missing:
+        np.insert(test, element, np.zeros(len(test[0])),0)
+        np.insert(test, element, np.zeros(len(test)),1)
 
     # Shrinking testing confusion matrix
     testOutcome = []
@@ -110,31 +123,64 @@ def decision_tree(data):
     trainAccuracy = np.sum(trainOutcome[:,0]) / np.sum(trainOutcome)
     print("Training Accuracy: " + str(trainAccuracy))
     print("Testing Accuracy: " + str(testAccuracy))
-    pdb.set_trace()
+   
     
     # Setting up Bar Graph
-    values = np.arange(0, 200, 25)
+    # make data:
+    # np.random.seed(3)
+    # x = 0.5 + np.arange(8)
+    # y = np.random.uniform(2, 7, len(x))
 
-    colors = plt.cm.BuPu(np.linspace(0, 0.5, len(uniquetypes)))
-    n_rows = len(testPrediction)
+    # # plot
+    # fig, ax = plt.subplots()
 
-    index = np.arange(len(uniquetypes)) + 0.3
-    bar_width = 0.4
+    # ax.bar(x, y, width=1, edgecolor="white", linewidth=0.7)
 
-    y_offset = np.zeros(len(uniquetypes))
+    # ax.set(xlim=(0, 8), xticks=np.arange(1, 8),
+    #     ylim=(0, 8), yticks=np.arange(1, 8))
 
-    cell_text = []
-    for row in range(n_rows):
-        plt.bar(index, testPrediction[row], bar_width, bottom=y_offset, color=colors[row])
-        y_offset = y_offset + testPrediction[row]
-        cell_text.append(['%1.1f' % (x / 1000.0) for x in y_offset])
+    # plt.show()
 
-    colors = colors[::-1]
-    cell_text.reverse()
-    barGraph = plt.table(cellText=cell_text,rowColours=colors,loc='bottom')
-    plt.subplots_adjust(left=0.2, bottom=0.2)
-    plt.xticks([])
+    # pdb.set_trace()
+
+    x = 0.5 + np.arange(len(_))
+    correct = testOutcome[:,0]
+    incorrect = testOutcome[:,1]
+
+    fig, ax = plt.subplots()
+    pdb.set_trace()
+    ax.bar(x, correct, width=1, edgecolor='white', linewidth=0.7, color='g')
+    ax.bar(x, incorrect, width=1, edgecolor='white', linewidth=0.7, color='r')
+
+    ax.set(xlim=(0, len(_)), xticks=np.arange(1, len(_)),
+       ylim=(0, len(_)), yticks=np.arange(1, len(_)))
+
     plt.show()
+    pdb.set_trace()
+
+
+    # values = np.arange(0, 200, 25)
+
+    # colors = plt.cm.BuPu(np.linspace(0, 0.5, len(uniquetypes)))
+    # n_rows = len(testPrediction)
+
+    # index = np.arange(len(uniquetypes)) + 0.3
+    # bar_width = 0.4
+
+    # y_offset = np.zeros(len(uniquetypes))
+
+    # cell_text = []
+    # for row in range(n_rows):
+    #     plt.bar(index, testPrediction[row], bar_width, bottom=y_offset, color=colors[row])
+    #     y_offset = y_offset + testPrediction[row]
+    #     cell_text.append(['%1.1f' % (x / 1000.0) for x in y_offset])
+
+    # colors = colors[::-1]
+    # cell_text.reverse()
+    # barGraph = plt.table(cellText=cell_text,rowColours=colors,loc='bottom')
+    # plt.subplots_adjust(left=0.2, bottom=0.2)
+    # plt.xticks([])
+    # plt.show()
 
 
     
