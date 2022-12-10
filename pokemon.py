@@ -124,31 +124,13 @@ def decision_tree(data):
     print("Training Accuracy: " + str(trainAccuracy))
     print("Testing Accuracy: " + str(testAccuracy))
    
-    
-    # Setting up Bar Graph
-    # make data:
-    # np.random.seed(3)
-    # x = 0.5 + np.arange(8)
-    # y = np.random.uniform(2, 7, len(x))
-
-    # # plot
-    # fig, ax = plt.subplots()
-
-    # ax.bar(x, y, width=1, edgecolor="white", linewidth=0.7)
-
-    # ax.set(xlim=(0, 8), xticks=np.arange(1, 8),
-    #     ylim=(0, 8), yticks=np.arange(1, 8))
-
-    # plt.show()
-
-    # pdb.set_trace()
 
     x = 0.5 + np.arange(len(_))
     correct = testOutcome[:,0]
     incorrect = testOutcome[:,1]
+    pdb.set_trace()
 
     fig, ax = plt.subplots()
-    pdb.set_trace()
     ax.bar(x, correct, width=1, edgecolor='white', linewidth=0.7, color='g')
     ax.bar(x, incorrect, width=1, edgecolor='white', linewidth=0.7, color='r')
 
@@ -156,31 +138,6 @@ def decision_tree(data):
        ylim=(0, len(_)), yticks=np.arange(1, len(_)))
 
     plt.show()
-    pdb.set_trace()
-
-
-    # values = np.arange(0, 200, 25)
-
-    # colors = plt.cm.BuPu(np.linspace(0, 0.5, len(uniquetypes)))
-    # n_rows = len(testPrediction)
-
-    # index = np.arange(len(uniquetypes)) + 0.3
-    # bar_width = 0.4
-
-    # y_offset = np.zeros(len(uniquetypes))
-
-    # cell_text = []
-    # for row in range(n_rows):
-    #     plt.bar(index, testPrediction[row], bar_width, bottom=y_offset, color=colors[row])
-    #     y_offset = y_offset + testPrediction[row]
-    #     cell_text.append(['%1.1f' % (x / 1000.0) for x in y_offset])
-
-    # colors = colors[::-1]
-    # cell_text.reverse()
-    # barGraph = plt.table(cellText=cell_text,rowColours=colors,loc='bottom')
-    # plt.subplots_adjust(left=0.2, bottom=0.2)
-    # plt.xticks([])
-    # plt.show()
 
 
     
