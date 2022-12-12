@@ -146,12 +146,11 @@ def decision_tree(data):
         temp = np.sum(element)
         if temp > ylim:
             ylim = temp
-
     ax.set(xlim=(0, len(_)+1), xticks=np.arange(0, len(_)), ylim=(0, ylim + 1), yticks=np.arange(0, len(_)))
     
     # Graphing Decision Tree (Which is a mistake)
     plt.figure()
-    plot_tree(myTree, class_names = _, filled=True, rounded=True, fontsize=8)
+    plot_tree(myTree, class_names = _, filled=True, rounded=True, fontsize=2)
     plt.show()
 
 
