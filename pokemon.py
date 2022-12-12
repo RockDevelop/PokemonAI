@@ -234,6 +234,25 @@ def neural_network(data):
     guessed_text = " ".join(guessed_types)
     actual_text = " ".join(actual_types)
 
+    # Create a confusion matrix
+    test = confusion_matrix(actual_index, y)
+
+    # Shrink the confusion matrix into right and wrong columns
+    testOutcome = []
+    for row in range(len(test)):
+        correct = 0
+        error = 0
+        for element in range(len(test[0])):
+            if row == element:
+                correct = test[row][element]
+            else:
+                error += test[row][element]
+        testOutcome.append([correct, error])
+    testOutcome = np.array(testOutcome)
+
+    # Create a bar graph here
+
+    
     # Generate a word cloud for the guessed types   
     guessed_wordcloud = WordCloud(background_color='white').generate(guessed_text)
     plt.imshow(guessed_wordcloud, interpolation='bilinear')
