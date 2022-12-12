@@ -25,6 +25,10 @@ from sklearn.metrics import confusion_matrix
 
 ROOT = os.path.dirname(os.path.abspath(__file__)) # Root directory of this code
 TRAIN_SPLIT = 0.9
+XTRAIN = np.zeros(1)
+YTRAIN = np.zeros(1)
+XTEST = np.zeros(1)
+YTEST = np.zeros(1)
 
 parser = argparse.ArgumentParser(description="Train a neural network or decision tree to classify which type a pokemon is based on their stats")
 parser.add_argument('-model', '--model', help='chooses to train either the neural network (nn) or the decision tree (dt) model - Example: python .\pokemon.py -model nn')
@@ -64,22 +68,22 @@ def decision_tree(data):
     maxt = np.max(uniquetypes) + 1
 
     # Spliting the data into a training and a testing set
-    xtrain, ytrain, xtest, ytest = splitData(stats, uniquetypes, TRAIN_SPLIT, True)
+    XTRAIN, YTRAIN, XTEST, YTEST = splitData(stats, uniquetypes, TRAIN_SPLIT, True)
 
     # Creating Decision Tree
     myTree = DecisionTreeClassifier(criterion='entropy')
-    myTree = myTree.fit(xtrain, ytrain)
+    myTree = myTree.fit(XTRAIN, YTRAIN)
 
     # Test Decision Tree
-    testPrediction = myTree.predict(xtest)
-    trainPrediction = myTree.predict(xtrain)
+    testPrediction = myTree.predict(XTEST)
+    trainPrediction = myTree.predict(XTRAIN)
 
     # Show confusion matrix for test data
-    test = confusion_matrix(ytest, testPrediction)
-    train = confusion_matrix(ytrain, trainPrediction)
+    test = confusion_matrix(YTEST, testPrediction)
+    train = confusion_matrix(YTRAIN, trainPrediction)
 
     # Accounting for missing lables
-    labels = np.unique(ytest)
+    labels = np.unique(YTEST)
     missing = []
     index = 0
     offset = 0
@@ -175,7 +179,7 @@ def neural_network(data):
     onehot = np.eye(maxt)[uniquetypes]
 
     # Spliting the data into a training and a testing set
-    xtrain, ytrain, xtest, ytest = splitData(stats, onehot, TRAIN_SPLIT, True)
+    XTRAIN, YTRAIN, XTEST, YTEST = splitData(stats, onehot, TRAIN_SPLIT, True)
 
     # Creating Neural Network
     model = Sequential()
@@ -204,14 +208,14 @@ def neural_network(data):
     # mcp_save = ModelCheckpoint('.saved_model.hdf5', save_best_only=True, monitor='accuracy', mode='max')
     reduce_lr_loss = ReduceLROnPlateau(monitor='accuracy', factor=0.1, patience=10, verbose=1, mode='max')
     # Train
-    history = model.fit(xtrain, ytrain, epochs=2000, batch_size=10, verbose=1, validation_split=0.1, callbacks=[es, reduce_lr_loss])
+    history = model.fit(XTRAIN, YTRAIN, epochs=2000, batch_size=10, verbose=1, validation_split=0.1, callbacks=[es, reduce_lr_loss])
 
     # Test
-    metrics = model.evaluate(xtest, ytest, verbose=1)
+    metrics = model.evaluate(XTEST, YTEST, verbose=1)
 
     # y contains the guessed types and actual_index contains the correct indexes
-    y = np.argmax(model.predict(xtest, verbose=0), axis=1)
-    _, actual_index = np.where(ytest)
+    y = np.argmax(model.predict(XTEST, verbose=0), axis=1)
+    _, actual_index = np.where(YTEST)
 
     # Creating a bar graph
     
@@ -291,29 +295,29 @@ def splitData(stats, onehot, train_split, shuffle):
     testing_indexes = indexes[trainNum:len(stats)]
 
     # Initialize empty lists
-    xtrain = []
-    ytrain = []
-    xtest = []
-    ytest = []
+    XTRAIN = []
+    YTRAIN = []
+    XTEST = []
+    YTEST = []
     
     # Loop over the indexes and append the NDarrays to the list
     for i in training_indexes:
-        xtrain.append(stats[i])
-        ytrain.append(onehot[i])
+        XTRAIN.append(stats[i])
+        YTRAIN.append(onehot[i])
     for i in testing_indexes:
-        xtest.append(stats[i])
-        ytest.append(onehot[i])
+        XTEST.append(stats[i])
+        YTEST.append(onehot[i])
 
     # Convert all the lists into NDarrays
-    xtrain = np.array(xtrain)
-    ytrain = np.array(ytrain)
-    xtest = np.array(xtest)
-    ytest = np.array(ytest)
+    XTRAIN = np.array(XTRAIN)
+    YTRAIN = np.array(YTRAIN)
+    XTEST = np.array(XTEST)
+    YTEST = np.array(YTEST)
 
     # Make sure there is at least 1 of
 
     # Return the NDarray
-    return xtrain, ytrain, xtest, ytest
+    return XTRAIN, YTRAIN, XTEST, YTEST
 
 if __name__ == "__main__":
     main(parser.parse_args())
