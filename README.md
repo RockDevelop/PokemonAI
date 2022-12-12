@@ -1,6 +1,8 @@
-# PokemonAI
-### Final project for Machine Learning
-A Python script meant to be run with command line inputs to choose which model you wish to run.
+# PokemonAI - Machine Learning Final Project
+
+## Description
+The main file is pokemon.py. This is a Python script meant to be run with command line inputs to choose which model you wish to run.
+You have the choice to run a decision tree model or a neural network model. The model will predict based on that stats and body type of a Pokemon what type it will be. The ouput will be the accuracy of the training followed by the accuracy of the testing. There are also visual aids to see how the model is performing. 
 This program requires several python libraries to run. The required libraries are listed below.
 
 ## Required Libraries
