@@ -92,8 +92,6 @@ def decision_tree(data):
             missing.append(index)
             offset += 1
         index += 1
-    print(f'Test: {np.shape(test)}')
-    print(f'Missing: {np.shape(missing)}')
     for element in missing:
         if element not in np.unique(testPrediction):
             test = np.insert(test, element, np.zeros(len(test[0])),0)
@@ -244,8 +242,6 @@ def neural_network(data):
             missing.append(index)
             offset += 1
         index += 1
-    print(f'Test: {np.shape(test)}')
-    print(f'Missing: {np.shape(missing)}')
     for element in missing:
         if element not in np.unique(y):
             test = np.insert(test, element, np.zeros(len(test[0])),0)
