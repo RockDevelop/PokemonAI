@@ -1,9 +1,12 @@
 # PokemonAI - Machine Learning Final Project
 
-## Description
-The main file is pokemon.py. This is a Python script meant to be run with command line inputs to choose which model you wish to run.
-You have the choice to run a decision tree model or a neural network model. The model will predict based on that stats and body type of a Pokemon what type it will be. The ouput will be the accuracy of the training followed by the accuracy of the testing. There are also visual aids to see how the model is performing. 
-This program requires several python libraries to run. The required libraries are listed below.
+## File Description
+`pokemon.py` - This is a Python script meant to be run with command line inputs to choose which model you wish to run.
+You have the choice to run a decision tree model or a neural network model. The model will predict based on that stats and body type of a Pokemon what type it will be. The ouput will be the accuracy of the training followed by the accuracy of the testing. There are also visual aids to see how the model is performing.  
+
+`data.csv` - This is a data set from [Kaggle](https://www.kaggle.com/datasets/alopez247/pokemon) that contains information on the first VI generations of pokemon games. The data is in the order below  
+**Number**|**Name**|**Type 1**|**Type 2**|**Stats Total**|**HP**|**Attack**|**Defense**|**Sp Attack**|**Sp Defense**|**Speed**|**Generation**|isLegendary |**Color**|**hasGender**|**Percent Male**|**Egg Group 1**|**Egg Group 2**|**hasMegaEvolution**|**Height Meters**|**Weight Kilograms**|**Catch Rate**|**Body Type**
+:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:
 
 ## Required Libraries
 * [Tensorflow](https://www.tensorflow.org/) - Backbone of the machine learning models
