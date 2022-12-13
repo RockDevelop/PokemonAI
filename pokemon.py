@@ -6,22 +6,18 @@ Links:          https://www.kaggle.com/datasets/alopez247/pokemon
                 https://bulbapedia.bulbagarden.net/wiki/Stat
                 https://www.graphviz.org/download/
 '''
-import h5py
-import math
-import sys
 import numpy as np
 import argparse
 import os
 import matplotlib.pyplot as plt
 from keras.models import Sequential
 from keras.layers import Input, Dense
-from keras.optimizers import SGD, Adam
-from keras.callbacks import Callback, EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
-from keras.utils.vis_utils import plot_model
+from keras.optimizers import Adam
+from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 from sklearn.tree import DecisionTreeClassifier, plot_tree
-import pdb
 from wordcloud import WordCloud
 from sklearn.metrics import confusion_matrix
+import pdb
 
 ROOT = os.path.dirname(os.path.abspath(__file__)) # Root directory of this code
 TRAIN_SPLIT = 0.9
@@ -136,7 +132,7 @@ def decision_tree(data):
     incorrect = testOutcome[:,1]
 
     fig, ax = plt.subplots()
-    colors = ['#A6B91A', '#705746', '#6F35FC', '#F7D02C', '#D685AD', '#C22E28', '#EE8130', '#A98FF3', '#735797', '#7AC74C', '#96D9D6', '#A8A77A', '#A33EA1', '#F95587', '#B6A136', '#B7B7CE', '#6390F0']
+    colors = ['#A6B91A', '#705746', '#6F35FC', '#F7D02C', '#D685AD', '#C22E28', '#EE8130', '#A98FF3', '#735797', '#7AC74C', '#E2BF65', '#96D9D6', '#A8A77A', '#A33EA1', '#F95587', '#B6A136', '#B7B7CE', '#6390F0']
     ax.bar(x, correct, width=1, align='edge', edgecolor='white', linewidth=0.7, color=colors)
     ax.bar(x, incorrect, width=1, bottom=correct, align='edge', edgecolor='white', linewidth=0.7, color='r')
     plt.xticks(np.arange(len(_)), _, color='black', rotation=45, fontsize='12', horizontalalignment='right')
@@ -266,13 +262,13 @@ def neural_network(data):
     incorrect = testOutcome[:,1]
 
     fig, ax = plt.subplots()
-    colors = ['#A6B91A', '#705746', '#6F35FC', '#F7D02C', '#D685AD', '#C22E28', '#EE8130', '#A98FF3', '#735797', '#7AC74C', '#96D9D6', '#A8A77A', '#A33EA1', '#F95587', '#B6A136', '#B7B7CE', '#6390F0']
+    colors = ['#A6B91A', '#705746', '#6F35FC', '#F7D02C', '#D685AD', '#C22E28', '#EE8130', '#A98FF3', '#735797', '#7AC74C', '#E2BF65', '#96D9D6', '#A8A77A', '#A33EA1', '#F95587', '#B6A136', '#B7B7CE', '#6390F0']
     ax.bar(x, correct, width=1, align='edge', edgecolor='white', linewidth=0.7, color=colors)
     ax.bar(x, incorrect, width=1, bottom=correct, align='edge', edgecolor='white', linewidth=0.7, color='r')
     plt.xticks(np.arange(len(np.unique(types))), np.unique(types), color='black', rotation=45, fontsize='12', horizontalalignment='right')
     plt.xlabel('Pokemon Types', fontweight='bold', color = 'black', fontsize='14', horizontalalignment='center')
     plt.ylabel('Number of Guesses Per Type', fontweight='bold', color = 'black', fontsize='14', horizontalalignment='center')
-
+    pdb.set_trace()
     ylim = 0
     for element in testOutcome:
         temp = np.sum(element)
