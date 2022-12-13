@@ -133,7 +133,7 @@ def decision_tree(data):
    
 
     # Making Bar Graph for Data
-    x = 0.5 + np.arange(len(_))
+    x = np.arange(len(_))
     correct = testOutcome[:,0]
     incorrect = testOutcome[:,1]
 
@@ -142,8 +142,8 @@ def decision_tree(data):
     ax.bar(x, correct, width=1, align='edge', edgecolor='white', linewidth=0.7, color=colors)
     ax.bar(x, incorrect, width=1, bottom=correct, align='edge', edgecolor='white', linewidth=0.7, color='r')
     plt.xticks(np.arange(len(_)), _, color='black', rotation=45, fontsize='12', horizontalalignment='right')
-    plt.xlabel('Pokemon Types', fontweight='bold', color = 'orange', fontsize='17', horizontalalignment='center')
-    plt.ylabel('Number of Guesses Per Type', fontweight='bold', color = 'orange', fontsize='17', horizontalalignment='center')
+    plt.xlabel('Pokemon Types', fontweight='bold', color = 'black', fontsize='14', horizontalalignment='center')
+    plt.ylabel('Number of Guesses Per Type', fontweight='bold', color = 'black', fontsize='14', horizontalalignment='center')
 
     ylim = 0
     for element in testOutcome:
@@ -217,9 +217,6 @@ def neural_network(data):
     y = np.argmax(model.predict(XTEST, verbose=0), axis=1)
     _, actual_index = np.where(YTEST)
 
-    # Creating a bar graph
-    
-
     # Convert the guessed types from numbers into a string
     guessed_types = []
     for elem in y:
@@ -237,6 +234,23 @@ def neural_network(data):
     # Create a confusion matrix
     test = confusion_matrix(actual_index, y)
 
+    # Accounting for missing lables
+    labels = np.unique(actual_index)
+    missing = []
+    index = 0
+    offset = 0
+    while index < len(np.unique(types)):
+        if index != labels[index - offset]:
+            missing.append(index)
+            offset += 1
+        index += 1
+    print(f'Test: {np.shape(test)}')
+    print(f'Missing: {np.shape(missing)}')
+    for element in missing:
+        if element not in np.unique(y):
+            test = np.insert(test, element, np.zeros(len(test[0])),0)
+            test = np.insert(test, element, np.zeros(len(test)),1)
+
     # Shrink the confusion matrix into right and wrong columns
     testOutcome = []
     for row in range(len(test)):
@@ -251,9 +265,27 @@ def neural_network(data):
     testOutcome = np.array(testOutcome)
 
     # Create a bar graph here
+    x = np.arange(len(np.unique(types)))
+    correct = testOutcome[:,0]
+    incorrect = testOutcome[:,1]
 
+    fig, ax = plt.subplots()
+    colors = ['#A6B91A', '#705746', '#6F35FC', '#F7D02C', '#D685AD', '#C22E28', '#EE8130', '#A98FF3', '#735797', '#7AC74C', '#96D9D6', '#A8A77A', '#A33EA1', '#F95587', '#B6A136', '#B7B7CE', '#6390F0']
+    ax.bar(x, correct, width=1, align='edge', edgecolor='white', linewidth=0.7, color=colors)
+    ax.bar(x, incorrect, width=1, bottom=correct, align='edge', edgecolor='white', linewidth=0.7, color='r')
+    plt.xticks(np.arange(len(np.unique(types))), np.unique(types), color='black', rotation=45, fontsize='12', horizontalalignment='right')
+    plt.xlabel('Pokemon Types', fontweight='bold', color = 'black', fontsize='14', horizontalalignment='center')
+    plt.ylabel('Number of Guesses Per Type', fontweight='bold', color = 'black', fontsize='14', horizontalalignment='center')
+
+    ylim = 0
+    for element in testOutcome:
+        temp = np.sum(element)
+        if temp > ylim:
+            ylim = temp
+    ax.set(xlim=(0, len(np.unique(types))+1), xticks=np.arange(0, len(np.unique(types))), ylim=(0, ylim + 1), yticks=np.arange(0, len(np.unique(types))))
     
     # Generate a word cloud for the guessed types   
+    plt.figure()
     guessed_wordcloud = WordCloud(background_color='white').generate(guessed_text)
     plt.imshow(guessed_wordcloud, interpolation='bilinear')
     plt.axis(False)
